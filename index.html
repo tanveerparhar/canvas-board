@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Board</title>
+  <style>
+
+  html, body {
+    margin: 0;
+  }
+  p{
+  	text-align: center;
+  }
+  canvas{
+  	border:2px solid #da55a0;
+  }
+
+</style>
+
+</head>
+<body>
+<p> PRESS R TO RESET THE CANVAS BOARD!</p>
+<!-- tabindex attribute is used to make focus on the canvas for keypressevents  -->
+<canvas tabindex='1' id="draw" width="800" height="800"></canvas>
+
+<script>
+	const canvas = document.querySelector('#draw');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+    let mousePressed =  false;
+	let lastX ;
+	let lastY;
+	let hue = 0;
+	const ctx = canvas.getContext('2d');
+	ctx.strokeStyle = '#BADA55';
+	ctx.lineCap ='round';
+	ctx.lineJoin ='round';
+	ctx.lineWidth = 15;
+	
+	function draw(e){
+		if(!mousePressed){
+			return;
+		}
+		 ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+		ctx.beginPath();
+		ctx.moveTo(lastX,lastY);
+		ctx.lineTo(e.offsetX,e.offsetY);
+		ctx.stroke();
+		lastX = e.offsetX;
+		lastY = e.offsetY;
+		hue++;
+		if (hue > 360){
+			hue = 0 ;
+		}
+		//console.log(e);
+	}
+
+	function reset(e){
+		if (e.which == '82' || e.which =='114'){
+		  ctx.clearRect(0, 0, canvas.width, canvas.height);
+		  //console.log(e.which);
+		}
+}
+
+	canvas.addEventListener('mousedown',(e)=> {
+		mousePressed = true;
+		lastX = e.offsetX;
+		lastY = e.offsetY;
+		
+	});
+	canvas.addEventListener('mousemove',draw);
+	canvas.addEventListener('mouseout',() =>{mousepressed = false;});
+	canvas.addEventListener("keypress",reset);
+</script>
+
+</body>
+</html>
